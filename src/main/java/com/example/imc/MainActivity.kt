@@ -6,40 +6,65 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 
+lateinit var nomeEditText: EditText
+lateinit var alturaEditText: EditText
+lateinit var pesoEditText: EditText
+
+
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         val calcular = findViewById<Button>(R.id.calcular)
+        val sair = findViewById<Button>(R.id.sair)
+
         calcular.setOnClickListener {
-            val altura = findViewById<EditText>(R.id.altura).text.toString().toDouble()
-            val peso = findViewById<EditText>(R.id.peso).text.toString().toInt()
+            nomeEditText = findViewById(R.id.nome)
+            alturaEditText = findViewById(R.id.altura)
+            pesoEditText = findViewById(R.id.peso)
+
             val resultado = findViewById<TextView>(R.id.resultado)
 
-            val imc = peso / (altura * altura)
 
-            if (imc < 18.5)
-            {
-                resultado.text = "você está abaixo do peso"
-            }else if (imc < 25)
-            {
-                resultado.text = "você está com peso ideal. Parabéns!"
-            }else if (imc < 30)
-            {
-                resultado.text = "você está levemente acima do peso"
-            }else if(imc < 35)
-            {
-                resultado.text = "você está com obesidade grau I"
-            }else if(imc < 40)
-            {
-                resultado.text = "você está com obesidade grau II"
-            }else
-            {
-                resultado.text = "você está próximo da morte"
+            if (validarCampo()){
+                val altura = alturaEditText.text.toString().toDouble()
+                val peso = pesoEditText.text.toString().toInt()
+
+
+                val imc = calcularImc(altura,peso)
+
+                resultado.text = (imc)
             }
 
 
+
+        }
+        sair.setOnClickListener {
+            finish()
         }
     }
+
+
+
+    private fun validarCampo(): Boolean {
+        var noError = true
+
+        if (nomeEditText.text.isBlank()){
+            nomeEditText.setError("Digite o seu nome")
+            noError = false
+        }
+        if (alturaEditText.text.isBlank()){
+            alturaEditText.setError("Digite a sua altura")
+            noError = false
+        }
+        if (pesoEditText.text.isBlank()){
+            pesoEditText.setError("Digite o seu peso")
+            noError = false
+        }
+        return noError
+
+    }
+
+
 }
